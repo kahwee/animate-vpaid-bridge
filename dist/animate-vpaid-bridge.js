@@ -1,45 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/* eslint-disable no-unused-vars */
-'use strict';
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-function toObject(val) {
-	if (val === null || val === undefined) {
-		throw new TypeError('Object.assign cannot be called with null or undefined');
-	}
-
-	return Object(val);
-}
-
-module.exports = Object.assign || function (target, source) {
-	var from;
-	var to = toObject(target);
-	var symbols;
-
-	for (var s = 1; s < arguments.length; s++) {
-		from = Object(arguments[s]);
-
-		for (var key in from) {
-			if (hasOwnProperty.call(from, key)) {
-				to[key] = from[key];
-			}
-		}
-
-		if (Object.getOwnPropertySymbols) {
-			symbols = Object.getOwnPropertySymbols(from);
-			for (var i = 0; i < symbols.length; i++) {
-				if (propIsEnumerable.call(from, symbols[i])) {
-					to[symbols[i]] = from[symbols[i]];
-				}
-			}
-		}
-	}
-
-	return to;
-};
-
-},{}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -61,7 +20,7 @@ var _toggles = require('../toggles');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"../toggles":5,"../trigger":6}],3:[function(require,module,exports){
+},{"../toggles":4,"../trigger":5}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -99,7 +58,7 @@ function _mapNumber(fromStart, fromEnd, toStart, toEnd, value) {
   return toStart + (toEnd - toStart) * _normNumber(fromStart, fromEnd, value);
 }
 
-},{"../trigger":6}],4:[function(require,module,exports){
+},{"../trigger":5}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -125,10 +84,6 @@ var _vastEnded2 = _interopRequireDefault(_vastEnded);
 var _vastTimeupdate = require('./handler/vast-timeupdate');
 
 var _vastTimeupdate2 = _interopRequireDefault(_vastTimeupdate);
-
-var _objectAssign = require('object-assign');
-
-var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -205,7 +160,7 @@ var Linear = function () {
       volume: 1.0
     };
 
-    this.previousAttributes = (0, _objectAssign2.default)({}, this._attributes);
+    this.previousAttributes = Object.assign({}, this._attributes);
 
     // open interactive panel -> AdExpandedChange, AdInteraction
     // when close panel -> AdExpandedChange, AdInteraction
@@ -575,7 +530,7 @@ var Linear = function () {
 
 exports.default = Linear;
 
-},{"./handler/vast-ended":2,"./handler/vast-timeupdate":3,"./toggles":5,"./trigger":6,"./util/load-css":7,"object-assign":1}],5:[function(require,module,exports){
+},{"./handler/vast-ended":1,"./handler/vast-timeupdate":2,"./toggles":4,"./trigger":5,"./util/load-css":6}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -628,7 +583,7 @@ function $removeAll() {
   this._ui = null;
 }
 
-},{"./trigger":6}],6:[function(require,module,exports){
+},{"./trigger":5}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -642,7 +597,7 @@ exports.default = function (event, msg) {
   });
 };
 
-},{}],7:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -658,7 +613,7 @@ exports.default = function (url) {
   return link;
 };
 
-},{}],8:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -670,6 +625,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _linear = require('vpaid-ad/src/linear');
 
 var _linear2 = _interopRequireDefault(_linear);
+
+var _createScript = require('./util/createScript');
+
+var _createScript2 = _interopRequireDefault(_createScript);
 
 var _trigger = require('vpaid-ad/src/trigger');
 
@@ -692,20 +651,37 @@ var AnimateVpaidBridge = function (_Linear) {
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AnimateVpaidBridge).call(this, options));
 
     _this.bridgeId = options.bridgeId;
+    _this.createjsUri = options.createjsUri;
+    _this.animateJs = options.animateJs;
+    _this.mediaFiles = options.mediaFiles || [];
     return _this;
   }
 
   _createClass(AnimateVpaidBridge, [{
     key: 'initAd',
     value: function initAd(width, height, viewMode, desiredBitrate, creativeData, environmentVars) {
+      var _this2 = this;
+
       this._attributes.width = width;
       this._attributes.height = height;
       this._attributes.viewMode = viewMode;
       this._attributes.desiredBitrate = desiredBitrate;
       this._slot = environmentVars.slot;
       this._videoSlot = environmentVars.videoSlot;
-      this.renderSlot_();
-      _trigger2.default.call(this, 'AdLoaded');
+      this.renderSlot_(function () {
+        var canvas = document.getElementById('canvas');
+        var exportRoot = new lib[_this2.bridgeId]();
+        var stage = new createjs.Stage(canvas);
+        stage.addChild(exportRoot);
+        stage.update();
+        createjs.Ticker.setFPS(lib.properties.fps);
+        createjs.Ticker.addEventListener('tick', stage);
+        var supportedVideos = _this2.mediaFiles.filter(function (mf) {
+          return _this2._videoSlot.canPlayType(mf.type);
+        });
+        _this2._videoSlot.setAttribute('src', supportedVideos[0].src);
+        _trigger2.default.call(_this2, 'AdLoaded');
+      });
     }
   }]);
 
@@ -715,16 +691,49 @@ var AnimateVpaidBridge = function (_Linear) {
 exports.default = AnimateVpaidBridge;
 
 
-AnimateVpaidBridge.prototype.renderSlot_ = function () {
+AnimateVpaidBridge.prototype.renderSlot_ = function (callback) {
+  var _this3 = this;
+
   var slotExists = this._slot && this._slot.tagName === 'DIV';
-  if (!slotExists) {
-    this._slot = document.createElement('div');
-    if (!document.body) {
-      document.body = document.createElement('body');
+  var createjsScript = (0, _createScript2.default)(this.createjsUri, function () {
+    if (!slotExists) {
+      _this3._slot = document.createElement('div');
+      if (!document.body) {
+        document.body = document.createElement('body');
+      }
+      document.body.appendChild(_this3._slot);
     }
-    document.body.appendChild(this._slot);
-  }
-  this._slot.innerHTML = '\n    <canvas id="canvas" width="550" height="400" style="background-color:#FFFFFF"></canvas>\n  ';
+    // this should have broken down into options.
+    _this3._slot.innerHTML = '\n      <canvas id="canvas" width="550" height="400" style="background-color:#FFFFFF"></canvas>\n    ';
+    // loads Adobe Animate CC JavaScript
+    var animateJsScript = (0, _createScript2.default)(_this3.animateJs, function () {
+      callback();
+    });
+    document.body.appendChild(animateJsScript);
+  });
+  document.body.appendChild(createjsScript);
 };
 
-},{"vpaid-ad/src/linear":4,"vpaid-ad/src/trigger":6}]},{},[8]);
+},{"./util/createScript":8,"vpaid-ad/src/linear":3,"vpaid-ad/src/trigger":5}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = createScript;
+/**
+ * Creates the script element and provides a callback via onload
+ *
+ * @param  {[type]}   path [description]
+ * @param  {Function} cb   [description]
+ * @return {[type]}        [description]
+ */
+function createScript(path, cb) {
+  var script = document.createElement('script');
+  script.src = path;
+  script.type = 'text/javascript';
+  script.onload = cb;
+  return script;
+}
+
+},{}]},{},[7]);
