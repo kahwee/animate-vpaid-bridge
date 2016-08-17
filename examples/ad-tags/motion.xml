@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VAST version="3.0">
+  <Ad id="STUB">
+    <InLine>
+      <AdSystem>Animate CC VPAID Bridge</AdSystem>
+      <AdTitle>VPAID</AdTitle>
+      <Impression><![CDATA[about:blank]]></Impression>
+      <Creatives>
+        <Creative>
+          <Linear skipoffset="00:00:05">
+            <Duration>00:00:15</Duration>
+            <MediaFiles>
+              <MediaFile apiFramework="VPAID" height="360" width="378"
+                type="application/javascript" delivery="progressive"><![CDATA[https://s3.amazonaws.com/animate-vpaid-bridge/ad-tags/motion.js]]></MediaFile>
+            </MediaFiles>
+            <TrackingEvents>
+              <Tracking event="close"><![CDATA[http://example.com/9-close]]></Tracking>
+              <Tracking event="start"><![CDATA[http://example.com/9-start]]></Tracking>
+              <Tracking event="firstQuartile"><![CDATA[http://example.com/9-firstQuartile]]></Tracking>
+              <Tracking event="midpoint"><![CDATA[http://example.com/9-midpoint]]></Tracking>
+              <Tracking event="thirdQuartile"><![CDATA[http://example.com/9-thirdQuartile]]></Tracking>
+              <Tracking event="complete"><![CDATA[http://example.com/9-complete-a]]></Tracking>
+              <Tracking event="complete"><![CDATA[http://example.com/9-complete-b]]></Tracking>
+              <Tracking event="complete"><![CDATA[http://example.com/9-complete-c]]></Tracking>
+              <Tracking event="pause"><![CDATA[http://example.com/9-pause]]></Tracking>
+              <Tracking event="resume"><![CDATA[http://example.com/9-resume]]></Tracking>
+              <Tracking event="mute"><![CDATA[http://example.com/9-mute]]></Tracking>
+              <Tracking event="unmute"><![CDATA[http://example.com/9-unmute]]></Tracking>
+            </TrackingEvents>
+            <VideoClicks>
+              <ClickTracking id="clinton2016"><![CDATA[http://example.com/9-clicktracking-clinton]]></ClickTracking>
+            </VideoClicks>
+          </Linear>
+        </Creative>
+      </Creatives>
+    </InLine>
+  </Ad>
+</VAST>

@@ -802,7 +802,7 @@ window.getVPAIDAd = function () {
       type: 'video/mp4'
     }],
     createjsUri: 'https://code.createjs.com/createjs-2015.11.26.min.js',
-    animateJs: 'https://s3.amazonaws.com/animate-vpaid-bridge/kahweetest.js',
+    animateJs: 'https://s3.amazonaws.com/animate-vpaid-bridge/exports/kahweetest.js',
     bridgeId: 'kahweetest'
   });
 };

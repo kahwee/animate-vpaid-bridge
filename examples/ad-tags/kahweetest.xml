@@ -11,7 +11,7 @@
             <Duration>00:00:15</Duration>
             <MediaFiles>
               <MediaFile apiFramework="VPAID" height="360" width="378"
-                type="application/javascript" delivery="progressive"><![CDATA[https://s3.amazonaws.com/animate-vpaid-bridge/sample-1.js]]></MediaFile>
+                type="application/javascript" delivery="progressive"><![CDATA[https://s3.amazonaws.com/animate-vpaid-bridge/ad-tags/sample-1.js]]></MediaFile>
             </MediaFiles>
             <TrackingEvents>
               <Tracking event="close"><![CDATA[http://example.com/9-close]]></Tracking>
@@ -28,7 +28,6 @@
               <Tracking event="unmute"><![CDATA[http://example.com/9-unmute]]></Tracking>
             </TrackingEvents>
             <VideoClicks>
-              <ClickTracking id="clinton2016"><![CDATA[http://example.com/9-clicktracking-clinton]]></ClickTracking>
               <ClickTracking id="trump2016"><![CDATA[http://example.com/9-clicktracking-trump]]></ClickTracking>
             </VideoClicks>
           </Linear>

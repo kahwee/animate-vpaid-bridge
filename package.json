@@ -10,7 +10,9 @@
     "start": "http-server -p 8787",
     "lint": "standard src/**/*.js",
     "browserify": "browserify src/index.js -o dist/animate-vpaid-bridge.js",
-    "browserify-example": "browserify src/examples/sample-1.js -o examples/sample-1.js",
+    "browserify-kahweetest": "browserify src/examples/kahweetest.js -o examples/ad-tags/kahweetest.js",
+    "browserify-motion": "browserify src/examples/motion.js -o examples/ad-tags/motion.js",
+    "browserify-examples": "npm run browserify-motion && npm run browserify-kahweetest",
     "uglify": "uglifyjs dist/animate-vpaid-bridge.js -o dist/animate-vpaid-bridge.min.js -c -m --screw-ie8",
     "build": "npm run browserify && npm run uglify",
     "test": "echo \"Error: no test specified\" && exit 1"
