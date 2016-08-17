@@ -10,7 +10,7 @@ window.getVPAIDAd = function () {
   return new AnimateVpaidBridge({
     mediaFiles: [
       {
-        src: '<YOURVIDEOURL>',
+        url: '<YOURVIDEOURL>',
         type: 'video/mp4'
       }
     ],

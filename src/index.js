@@ -1,6 +1,5 @@
 import Linear from 'vpaid-ad/src/linear'
 import createScript from './util/createScript'
-import $trigger from 'vpaid-ad/src/trigger'
 
 export default class AnimateVpaidBridge extends Linear {
 
@@ -9,7 +8,9 @@ export default class AnimateVpaidBridge extends Linear {
     this.bridgeId = options.bridgeId
     this.createjsUri = options.createjsUri
     this.animateJs = options.animateJs
-    this.mediaFiles = options.mediaFiles || []
+    this.once('AdStarted', () => {
+      this._videoSlot.play()
+    })
   }
 
   initAd (width, height, viewMode, desiredBitrate, creativeData, environmentVars) {
@@ -22,15 +23,13 @@ export default class AnimateVpaidBridge extends Linear {
     this.renderSlot_(() => {
       const canvas = document.getElementById('canvas')
       const exportRoot = new lib[this.bridgeId]()
+      exportRoot.__elan__ = this
       let stage = new createjs.Stage(canvas)
       stage.addChild(exportRoot)
       stage.update()
       createjs.Ticker.setFPS(lib.properties.fps)
       createjs.Ticker.addEventListener('tick', stage)
-      let supportedVideos = this.mediaFiles.filter((mf) => this._videoSlot.canPlayType(mf.type))
-      this._videoSlot.setAttribute('src', supportedVideos[0].src)
-      $trigger.call(this, 'AdLoaded')
-
+      super.initAd(width, height, viewMode, desiredBitrate, creativeData, environmentVars)
     })
   }
 }
@@ -47,7 +46,7 @@ AnimateVpaidBridge.prototype.renderSlot_ = function (callback) {
     }
     // this should have broken down into options.
     this._slot.innerHTML = `
-      <canvas id="canvas" width="550" height="400" style="background-color:#FFFFFF"></canvas>
+      <canvas id="canvas" width="550" height="400"></canvas>
     `
     // loads Adobe Animate CC JavaScript
     const animateJsScript = createScript(this.animateJs, () => {

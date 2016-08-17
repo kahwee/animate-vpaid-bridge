@@ -27,6 +27,10 @@
               <Tracking event="mute"><![CDATA[http://example.com/9-mute]]></Tracking>
               <Tracking event="unmute"><![CDATA[http://example.com/9-unmute]]></Tracking>
             </TrackingEvents>
+            <VideoClicks>
+              <ClickTracking id="clinton2016"><![CDATA[http://example.com/9-clicktracking-clinton]]></ClickTracking>
+              <ClickTracking id="trump2016"><![CDATA[http://example.com/9-clicktracking-trump]]></ClickTracking>
+            </VideoClicks>
           </Linear>
         </Creative>
       </Creatives>

@@ -1,9 +1,9 @@
 import AnimateVpaidBridge from '../index'
 window.getVPAIDAd = function () {
   return new AnimateVpaidBridge({
-    mediaFiles: [
+    videos: [
       {
-        src: 'https://s3.amazonaws.com/m-vast-vpaid-server/static/videos/apple-watch.mp4',
+        url: 'https://s3.amazonaws.com/m-vast-vpaid-server/static/videos/apple-watch.mp4',
         type: 'video/mp4'
       }
     ],
