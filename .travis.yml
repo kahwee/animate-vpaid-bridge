@@ -1,0 +1,9 @@
+deploy:
+  provider: s3
+  access_key_id: AKIAJ3OKRL2BOW5WII3A
+  secret_access_key:
+    secure: allWPzeiThm6hyyffWQ7JUTrvD4nrL1actpTRomxV5az+tjHxfIn7GbGrM7fDd39+5EOBHFb/yaGiSnM/ZvVcpyzmZV+yWvePTzMH99AHAM+0P1kOKiuDWOpsdWeSFt/Fh3l3ZzMH2S3H3AxSXnWUSsKedp1hrSxic6sT/L/ovqG+L3xYks5jYm1ai1DWLrx2zNHz9W3rxt2J5yt0LLHhthSr2T8z9cfrU02LtENoVMC43WowwEbiVGsQwRrpJ4SfpLCI/6T5vnK6HDcBAEjdxnnp7CBUxDpmwwkMahhEW5rhyus3jy3LrLokNAh+jlzWsf3q9z5+HVTu0Y1mQxBU7kcwDVNWnUdFAFymUj/zVXHsjxRlode1tWUDx3TcR3YrwCbPk3mhSRpVOQGBjffS6WCuUHDDFT1bzACVX3iSXU7RiZixa8lMX9412j6ehC+KBxgek4r+8JsX4oQu+2lS8HdvzWZJvk+VRxbx4FToeD5u+XgIJNymPcv2uNz2teeJ75k4kRjWlWx1xbxhgFW6rCzozjonJxpnNscgLy0vhj3zDaeprbnwOeQnU1EZu65T2Ff9Z+aNHyihJ8G8Km5GjB6/tQO4vhDGTH6eKigTma1EK/kquuXk97LXujjHgGTvqxSRUkhpuvZVxSFpgscIORY1LIRbcz7WOPlHMklTaE=
+  bucket: animate-vpaid-bridge
+  acl: public_read
+  on:
+    repo: kahwee/animate-vpaid-bridge
