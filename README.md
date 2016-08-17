@@ -1,6 +1,6 @@
 # animate-vpaid-bridge
 
-Proof of concept of bridging between Adobe Animate CC and VPAID advertisements. Open issues to give your comments.
+Bridges between Adobe Animate CC and VPAID advertisements. Open issues to give your comments.
 
 # Usage
 
@@ -23,7 +23,9 @@ window.getVPAIDAd = function () {
 
 # Demo
 
-VAST ad tag: https://s3.amazonaws.com/animate-vpaid-bridge/sample-1.xml
+VAST with VPAID ad tag: https://s3.amazonaws.com/animate-vpaid-bridge/sample-1.xml
+
+Try it in [Google IMA Player](https://developers.google.com/interactive-media-ads/docs/sdks/html5/vastinspector) and [JW Player](https://developer.jwplayer.com/tools/ad-tester/)
 
 # License
 
