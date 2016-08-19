@@ -17,7 +17,8 @@ window.getVPAIDAd = function () {
       }
     ],
     createjsUri: 'https://code.createjs.com/createjs-2015.11.26.min.js',
-    animateJs: 'https://s3.amazonaws.com/animate-vpaid-bridge/kahweetest.js',
+    basePath: 'https://s3.amazonaws.com/animate-vpaid-bridge/dist/examples/exports/',
+    animateJs: 'https://s3.amazonaws.com/animate-vpaid-bridge/dist/examples/exports/kahweetest.js',
     bridgeId: 'kahweetest'
   })
 }
@@ -27,8 +28,8 @@ window.getVPAIDAd = function () {
 
 VAST with VPAID ad tag: 
 
-* https://s3.amazonaws.com/animate-vpaid-bridge/ad-tags/kahweetest.xml (An elephant moving on screen, click on the shadow)
-* https://s3.amazonaws.com/animate-vpaid-bridge/ad-tags/motion.xml (A motion tween)
+* [An elephant moving on screen, click on the shadow](https://s3.amazonaws.com/animate-vpaid-bridge/dist/examples/ad-tags/kahweetest.xml)
+* [A motion tween](https://s3.amazonaws.com/animate-vpaid-bridge/dist/examples/ad-tags/motion.xml)
 
 Try it in [Google IMA Player](https://developers.google.com/interactive-media-ads/docs/sdks/html5/vastinspector) and [JW Player](https://developer.jwplayer.com/tools/ad-tester/)
 

@@ -73,7 +73,7 @@ export default class AnimateVpaidBridge extends Linear {
         frames: ssMetadata[i].frames
       })
     }
-    initStage()
+    this.initStage()
   }
 
   /**

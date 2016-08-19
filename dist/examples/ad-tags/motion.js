@@ -912,7 +912,7 @@ var AnimateVpaidBridge = function (_Linear) {
           frames: ssMetadata[i].frames
         });
       }
-      initStage();
+      this.initStage();
     }
 
     /**

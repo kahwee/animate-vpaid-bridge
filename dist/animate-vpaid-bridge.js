@@ -824,6 +824,7 @@ var AnimateVpaidBridge = function (_Linear) {
     _this.bridgeId = options.bridgeId;
     _this.createjsUri = options.createjsUri;
     _this.animateJs = options.animateJs;
+    _this.basePath = options.basePath;
     _this.once('AdStarted', function () {
       _this._videoSlot.play();
     });
@@ -844,31 +845,29 @@ var AnimateVpaidBridge = function (_Linear) {
       this.renderSlot_(function () {
         _this2.canvas = document.getElementById('canvas');
         _this2.images = images || {};
-        _this2.loader = new createjs.LoadQueue(false);
+        _this2.loader = new createjs.LoadQueue(false, _this2.basePath);
         _this2.loader.addEventListener('fileload', _this2.handleFileLoad.bind(_this2));
-        _this2.loader.addEventListener('complete', function () {
-          this.handleComplete.bind(this);
+        _this2.loader.addEventListener('complete', function (ev) {
+          _this2.handleComplete(ev);
         });
         _get(Object.getPrototypeOf(AnimateVpaidBridge.prototype), 'initAd', _this2).call(_this2, width, height, viewMode, desiredBitrate, creativeData, environmentVars);
-        _this2.loader.loadManifest(lib.properties.manifest);
+        if (lib.properties.manifest.length === 0) {
+          _this2.initStage();
+        } else {
+          _this2.loader.loadManifest(lib.properties.manifest);
+        }
       });
     }
   }, {
     key: 'handleFileLoad',
-    value: function handleFileLoad(evt) {
-      if (evt.item.type == 'image') {
-        images[evt.item.id] = evt.result;
+    value: function handleFileLoad(ev) {
+      if (ev.item.type == 'image') {
+        images[ev.item.id] = ev.result;
       }
     }
   }, {
-    key: 'handleComplete',
-    value: function handleComplete(evt) {
-      // This function is always called, irrespective of the content. You can use the variable "stage" after it is created in token create_stage.
-      var queue = evt.target;
-      var ssMetadata = lib.ssMetadata;
-      for (i = 0; i < ssMetadata.length; i++) {
-        ss[ssMetadata[i].name] = new createjs.SpriteSheet({ 'images': [queue.getResult(ssMetadata[i].name)], 'frames': ssMetadata[i].frames });
-      }
+    key: 'initStage',
+    value: function initStage() {
       var exportRoot = new lib[this.bridgeId]();
       this.stage = new createjs.Stage(this.canvas);
       exportRoot.__elan__ = this;
@@ -877,6 +876,21 @@ var AnimateVpaidBridge = function (_Linear) {
       // Registers the "tick" event listener.
       createjs.Ticker.setFPS(lib.properties.fps);
       createjs.Ticker.addEventListener('tick', this.stage);
+      this.resizeCanvas(false, 'both', false, 1);
+    }
+  }, {
+    key: 'handleComplete',
+    value: function handleComplete(ev) {
+      // This function is always called, irrespective of the content. You can use the variable "stage" after it is created in token create_stage.
+      var queue = ev.target;
+      var ssMetadata = lib.ssMetadata;
+      for (var i = 0; i < ssMetadata.length; i++) {
+        ss[ssMetadata[i].name] = new createjs.SpriteSheet({
+          images: [queue.getResult(ssMetadata[i].name)],
+          frames: ssMetadata[i].frames
+        });
+      }
+      this.initStage();
     }
 
     /**
@@ -886,33 +900,35 @@ var AnimateVpaidBridge = function (_Linear) {
 
   }, {
     key: 'resizeCanvas',
-    value: function resizeCanvas() {
-      var w = lib.properties.width,
-          h = lib.properties.height;
-      var iw = window.innerWidth,
-          ih = window.innerHeight;
-      var pRatio = window.devicePixelRatio,
-          xRatio = iw / w,
-          yRatio = ih / h,
-          sRatio = 1;
+    value: function resizeCanvas(isResp, respDim, isScale, scaleType) {
+      var w = lib.properties.width;
+      var h = lib.properties.height;
+      var iw = window.innerWidth;
+      var ih = window.innerHeight;
+      var pRatio = window.devicePixelRatio;
+      var xRatio = iw / w;
+      var yRatio = ih / h;
+      var sRatio = 1;
       if (isResp) {
-        if (respDim == 'width' && lastW == iw || respDim == 'height' && lastH == ih) {
-          sRatio = lastS;
+        if (respDim === 'width' && this.lastW == iw || respDim === 'height' && this.lastH == ih) {
+          sRatio = this.lastS;
         } else if (!isScale) {
           if (iw < w || ih < h) sRatio = Math.min(xRatio, yRatio);
-        } else if (scaleType == 1) {
+        } else if (scaleType === 1) {
           sRatio = Math.min(xRatio, yRatio);
-        } else if (scaleType == 2) {
+        } else if (scaleType === 2) {
           sRatio = Math.max(xRatio, yRatio);
         }
       }
-      canvas.width = w * pRatio * sRatio;
-      canvas.height = h * pRatio * sRatio;
-      canvas.style.width = w * sRatio + 'px';
-      canvas.style.height = h * sRatio + 'px';
-      stage.scaleX = pRatio * sRatio;
-      stage.scaleY = pRatio * sRatio;
-      lastW = iw;lastH = ih;lastS = sRatio;
+      this.canvas.width = w * pRatio * sRatio;
+      this.canvas.height = h * pRatio * sRatio;
+      this.canvas.style.width = w * sRatio + 'px';
+      this.canvas.style.height = h * sRatio + 'px';
+      this.stage.scaleX = pRatio * sRatio;
+      this.stage.scaleY = pRatio * sRatio;
+      this.lastW = iw;
+      this.lastH = ih;
+      this.lastS = sRatio;
     }
   }]);
 
