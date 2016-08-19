@@ -21,16 +21,46 @@ export default class AnimateVpaidBridge extends Linear {
     this._slot = environmentVars.slot
     this._videoSlot = environmentVars.videoSlot
     this.renderSlot_(() => {
-      const canvas = document.getElementById('canvas')
-      const exportRoot = new lib[this.bridgeId]()
-      exportRoot.__elan__ = this
-      let stage = new createjs.Stage(canvas)
-      stage.addChild(exportRoot)
-      stage.update()
-      createjs.Ticker.setFPS(lib.properties.fps)
-      createjs.Ticker.addEventListener('tick', stage)
-      super.initAd(width, height, viewMode, desiredBitrate, creativeData, environmentVars)
+      this.canvas = document.getElementById('canvas')
+      this.images = images || {}
+      this.loader = new createjs.LoadQueue(false)
+      this.loader.addEventListener('fileload', this.handleFileLoad.bind(this))
+      this.loader.addEventListener('complete', function () {
+        this.handleComplete.bind(this)
+      })
+      super.initAd(
+        width,
+        height,
+        viewMode,
+        desiredBitrate,
+        creativeData,
+        environmentVars
+      )
+      this.loader.loadManifest(lib.properties.manifest)
     })
+  }
+
+  handleFileLoad (evt) {
+    if (evt.item.type == 'image') {
+      images[evt.item.id] = evt.result
+    }
+  }
+
+  handleComplete (evt) {
+    // This function is always called, irrespective of the content. You can use the variable "stage" after it is created in token create_stage.
+    var queue = evt.target
+    var ssMetadata = lib.ssMetadata
+    for (i = 0; i < ssMetadata.length; i++) {
+      ss[ssMetadata[i].name] = new createjs.SpriteSheet({'images': [queue.getResult(ssMetadata[i].name)], 'frames': ssMetadata[i].frames})
+    }
+    let exportRoot = new lib[this.bridgeId]()
+    this.stage = new createjs.Stage(this.canvas)
+    exportRoot.__elan__ = this
+    this.stage.addChild(exportRoot)
+    this.stage.enableMouseOver()
+    // Registers the "tick" event listener.
+    createjs.Ticker.setFPS(lib.properties.fps)
+    createjs.Ticker.addEventListener('tick', this.stage)
   }
 
   /**

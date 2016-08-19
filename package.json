@@ -9,9 +9,10 @@
   "scripts": {
     "start": "http-server -p 8787",
     "lint": "standard src/**/*.js",
+    "build": "npm run browserify && npm run browserify-examples",
     "browserify": "browserify src/index.js -o dist/animate-vpaid-bridge.js",
-    "browserify-kahweetest": "browserify src/examples/kahweetest.js -o examples/ad-tags/kahweetest.js",
-    "browserify-motion": "browserify src/examples/motion.js -o examples/ad-tags/motion.js",
+    "browserify-kahweetest": "browserify src/examples/kahweetest.js -o dist/examples/ad-tags/kahweetest.js",
+    "browserify-motion": "browserify src/examples/motion.js -o dist/examples/ad-tags/motion.js",
     "browserify-examples": "npm run browserify-motion && npm run browserify-kahweetest",
     "uglify": "uglifyjs dist/animate-vpaid-bridge.js -o dist/animate-vpaid-bridge.min.js -c -m --screw-ie8",
     "build": "npm run browserify && npm run uglify"
