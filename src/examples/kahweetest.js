@@ -8,7 +8,7 @@ window.getVPAIDAd = function () {
       }
     ],
     createjsUri: 'https://code.createjs.com/createjs-2015.11.26.min.js',
-    animateJs: 'https://s3.amazonaws.com/animate-vpaid-bridge/exports/kahweetest.js',
+    animateJs: 'https://s3.amazonaws.com/animate-vpaid-bridge/dist/examples/exports/kahweetest.js',
     bridgeId: 'kahweetest'
   })
 }

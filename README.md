@@ -2,6 +2,8 @@
 
 Bridges between Adobe Animate CC and VPAID advertisements. Open issues to give your comments.
 
+[![Build Status](https://travis-ci.org/kahwee/animate-vpaid-bridge.svg?branch=master)](https://travis-ci.org/kahwee/animate-vpaid-bridge)
+
 # Usage
 
 ```js

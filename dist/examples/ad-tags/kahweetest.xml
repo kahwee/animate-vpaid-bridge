@@ -11,7 +11,7 @@
             <Duration>00:00:15</Duration>
             <MediaFiles>
               <MediaFile apiFramework="VPAID" height="360" width="378"
-                type="application/javascript" delivery="progressive"><![CDATA[https://s3.amazonaws.com/animate-vpaid-bridge/ad-tags/kahweetest.js]]></MediaFile>
+                type="application/javascript" delivery="progressive"><![CDATA[https://s3.amazonaws.com/animate-vpaid-bridge/dist/examples/ad-tags/kahweetest.js]]></MediaFile>
             </MediaFiles>
             <TrackingEvents>
               <Tracking event="close"><![CDATA[http://example.com/9-close]]></Tracking>

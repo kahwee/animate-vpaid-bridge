@@ -802,7 +802,7 @@ window.getVPAIDAd = function () {
       type: 'video/mp4'
     }],
     createjsUri: 'https://code.createjs.com/createjs-2015.11.26.min.js',
-    animateJs: 'https://s3.amazonaws.com/animate-vpaid-bridge/exports/kahweetest.js',
+    animateJs: 'https://s3.amazonaws.com/animate-vpaid-bridge/dist/examples/exports/kahweetest.js',
     bridgeId: 'kahweetest'
   });
 };
@@ -863,16 +863,77 @@ var AnimateVpaidBridge = function (_Linear) {
       this._slot = environmentVars.slot;
       this._videoSlot = environmentVars.videoSlot;
       this.renderSlot_(function () {
-        var canvas = document.getElementById('canvas');
-        var exportRoot = new lib[_this2.bridgeId]();
-        exportRoot.__elan__ = _this2;
-        var stage = new createjs.Stage(canvas);
-        stage.addChild(exportRoot);
-        stage.update();
-        createjs.Ticker.setFPS(lib.properties.fps);
-        createjs.Ticker.addEventListener('tick', stage);
+        _this2.canvas = document.getElementById('canvas');
+        _this2.images = images || {};
+        _this2.loader = new createjs.LoadQueue(false);
+        _this2.loader.addEventListener('fileload', _this2.handleFileLoad.bind(_this2));
+        _this2.loader.addEventListener('complete', function () {
+          this.handleComplete.bind(this);
+        });
         _get(Object.getPrototypeOf(AnimateVpaidBridge.prototype), 'initAd', _this2).call(_this2, width, height, viewMode, desiredBitrate, creativeData, environmentVars);
+        _this2.loader.loadManifest(lib.properties.manifest);
       });
+    }
+  }, {
+    key: 'handleFileLoad',
+    value: function handleFileLoad(evt) {
+      if (evt.item.type == 'image') {
+        images[evt.item.id] = evt.result;
+      }
+    }
+  }, {
+    key: 'handleComplete',
+    value: function handleComplete(evt) {
+      // This function is always called, irrespective of the content. You can use the variable "stage" after it is created in token create_stage.
+      var queue = evt.target;
+      var ssMetadata = lib.ssMetadata;
+      for (i = 0; i < ssMetadata.length; i++) {
+        ss[ssMetadata[i].name] = new createjs.SpriteSheet({ 'images': [queue.getResult(ssMetadata[i].name)], 'frames': ssMetadata[i].frames });
+      }
+      var exportRoot = new lib[this.bridgeId]();
+      this.stage = new createjs.Stage(this.canvas);
+      exportRoot.__elan__ = this;
+      this.stage.addChild(exportRoot);
+      this.stage.enableMouseOver();
+      // Registers the "tick" event listener.
+      createjs.Ticker.setFPS(lib.properties.fps);
+      createjs.Ticker.addEventListener('tick', this.stage);
+    }
+
+    /**
+     * This bit is from Adobe Animate CC
+     * @return {[type]} [description]
+     */
+
+  }, {
+    key: 'resizeCanvas',
+    value: function resizeCanvas() {
+      var w = lib.properties.width,
+          h = lib.properties.height;
+      var iw = window.innerWidth,
+          ih = window.innerHeight;
+      var pRatio = window.devicePixelRatio,
+          xRatio = iw / w,
+          yRatio = ih / h,
+          sRatio = 1;
+      if (isResp) {
+        if (respDim == 'width' && lastW == iw || respDim == 'height' && lastH == ih) {
+          sRatio = lastS;
+        } else if (!isScale) {
+          if (iw < w || ih < h) sRatio = Math.min(xRatio, yRatio);
+        } else if (scaleType == 1) {
+          sRatio = Math.min(xRatio, yRatio);
+        } else if (scaleType == 2) {
+          sRatio = Math.max(xRatio, yRatio);
+        }
+      }
+      canvas.width = w * pRatio * sRatio;
+      canvas.height = h * pRatio * sRatio;
+      canvas.style.width = w * sRatio + 'px';
+      canvas.style.height = h * sRatio + 'px';
+      stage.scaleX = pRatio * sRatio;
+      stage.scaleY = pRatio * sRatio;
+      lastW = iw;lastH = ih;lastS = sRatio;
     }
   }]);
 
