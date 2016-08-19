@@ -37,7 +37,11 @@ export default class AnimateVpaidBridge extends Linear {
         creativeData,
         environmentVars
       )
-      this.loader.loadManifest(lib.properties.manifest)
+      if (lib.properties.manifest.length === 0) {
+        this.initStage()
+      } else {
+        this.loader.loadManifest(lib.properties.manifest)
+      }
     })
   }
 
@@ -45,6 +49,18 @@ export default class AnimateVpaidBridge extends Linear {
     if (ev.item.type == 'image') {
       images[ev.item.id] = ev.result
     }
+  }
+
+  initStage () {
+    let exportRoot = new lib[this.bridgeId]()
+    this.stage = new createjs.Stage(this.canvas)
+    exportRoot.__elan__ = this
+    this.stage.addChild(exportRoot)
+    this.stage.enableMouseOver()
+    // Registers the "tick" event listener.
+    createjs.Ticker.setFPS(lib.properties.fps)
+    createjs.Ticker.addEventListener('tick', this.stage)
+    this.resizeCanvas(false, 'both', false, 1)
   }
 
   handleComplete (ev) {
@@ -57,15 +73,7 @@ export default class AnimateVpaidBridge extends Linear {
         frames: ssMetadata[i].frames
       })
     }
-    let exportRoot = new lib[this.bridgeId]()
-    this.stage = new createjs.Stage(this.canvas)
-    exportRoot.__elan__ = this
-    this.stage.addChild(exportRoot)
-    this.stage.enableMouseOver()
-    // Registers the "tick" event listener.
-    createjs.Ticker.setFPS(lib.properties.fps)
-    createjs.Ticker.addEventListener('tick', this.stage)
-    this.resizeCanvas(false, 'both', false, 1)
+    initStage()
   }
 
   /**

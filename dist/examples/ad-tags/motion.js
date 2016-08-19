@@ -873,7 +873,11 @@ var AnimateVpaidBridge = function (_Linear) {
           _this2.handleComplete(ev);
         });
         _get(Object.getPrototypeOf(AnimateVpaidBridge.prototype), 'initAd', _this2).call(_this2, width, height, viewMode, desiredBitrate, creativeData, environmentVars);
-        _this2.loader.loadManifest(lib.properties.manifest);
+        if (lib.properties.manifest.length === 0) {
+          _this2.initStage();
+        } else {
+          _this2.loader.loadManifest(lib.properties.manifest);
+        }
       });
     }
   }, {
@@ -882,6 +886,19 @@ var AnimateVpaidBridge = function (_Linear) {
       if (ev.item.type == 'image') {
         images[ev.item.id] = ev.result;
       }
+    }
+  }, {
+    key: 'initStage',
+    value: function initStage() {
+      var exportRoot = new lib[this.bridgeId]();
+      this.stage = new createjs.Stage(this.canvas);
+      exportRoot.__elan__ = this;
+      this.stage.addChild(exportRoot);
+      this.stage.enableMouseOver();
+      // Registers the "tick" event listener.
+      createjs.Ticker.setFPS(lib.properties.fps);
+      createjs.Ticker.addEventListener('tick', this.stage);
+      this.resizeCanvas(false, 'both', false, 1);
     }
   }, {
     key: 'handleComplete',
@@ -895,15 +912,7 @@ var AnimateVpaidBridge = function (_Linear) {
           frames: ssMetadata[i].frames
         });
       }
-      var exportRoot = new lib[this.bridgeId]();
-      this.stage = new createjs.Stage(this.canvas);
-      exportRoot.__elan__ = this;
-      this.stage.addChild(exportRoot);
-      this.stage.enableMouseOver();
-      // Registers the "tick" event listener.
-      createjs.Ticker.setFPS(lib.properties.fps);
-      createjs.Ticker.addEventListener('tick', this.stage);
-      this.resizeCanvas(false, 'both', false, 1);
+      initStage();
     }
 
     /**
