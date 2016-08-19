@@ -8,6 +8,7 @@ export default class AnimateVpaidBridge extends Linear {
     this.bridgeId = options.bridgeId
     this.createjsUri = options.createjsUri
     this.animateJs = options.animateJs
+    this.basePath = options.basePath
     this.once('AdStarted', () => {
       this._videoSlot.play()
     })
@@ -23,7 +24,7 @@ export default class AnimateVpaidBridge extends Linear {
     this.renderSlot_(() => {
       this.canvas = document.getElementById('canvas')
       this.images = images || {}
-      this.loader = new createjs.LoadQueue(false)
+      this.loader = new createjs.LoadQueue(false, this.basePath)
       this.loader.addEventListener('fileload', this.handleFileLoad.bind(this))
       this.loader.addEventListener('complete', (ev) => {
         this.handleComplete(ev)
@@ -48,8 +49,8 @@ export default class AnimateVpaidBridge extends Linear {
 
   handleComplete (ev) {
     // This function is always called, irrespective of the content. You can use the variable "stage" after it is created in token create_stage.
-    var queue = ev.target
-    var ssMetadata = lib.ssMetadata
+    const queue = ev.target
+    const ssMetadata = lib.ssMetadata
     for (var i = 0; i < ssMetadata.length; i++) {
       ss[ssMetadata[i].name] = new createjs.SpriteSheet({
         images: [queue.getResult(ssMetadata[i].name)],
@@ -64,38 +65,46 @@ export default class AnimateVpaidBridge extends Linear {
     // Registers the "tick" event listener.
     createjs.Ticker.setFPS(lib.properties.fps)
     createjs.Ticker.addEventListener('tick', this.stage)
+    this.resizeCanvas(false, 'both', false, 1)
   }
 
   /**
    * This bit is from Adobe Animate CC
    * @return {[type]} [description]
    */
-  resizeCanvas () {
-    var w = lib.properties.width, h = lib.properties.height
-    var iw = window.innerWidth, ih = window.innerHeight
-    var pRatio = window.devicePixelRatio, xRatio = iw / w, yRatio = ih / h, sRatio = 1
+  resizeCanvas (isResp, respDim, isScale, scaleType) {
+    const w = lib.properties.width
+    const h = lib.properties.height
+    const iw = window.innerWidth
+    const ih = window.innerHeight
+    const pRatio = window.devicePixelRatio
+    const xRatio = iw / w
+    const yRatio = ih / h
+    let sRatio = 1
     if (isResp) {
-      if ((respDim == 'width' && lastW == iw) || (respDim == 'height' && lastH == ih)) {
-        sRatio = lastS
+      if ((respDim === 'width' && this.lastW == iw) || (respDim === 'height' && this.lastH == ih)) {
+        sRatio = this.lastS
       }
       else if (!isScale) {
         if (iw < w || ih < h)
           sRatio = Math.min(xRatio, yRatio)
       }
-      else if (scaleType == 1) {
+      else if (scaleType === 1) {
         sRatio = Math.min(xRatio, yRatio)
       }
-      else if (scaleType == 2) {
+      else if (scaleType === 2) {
         sRatio = Math.max(xRatio, yRatio)
       }
     }
-    canvas.width = w * pRatio * sRatio
-    canvas.height = h * pRatio * sRatio
-    canvas.style.width = w * sRatio + 'px'
-    canvas.style.height = h * sRatio + 'px'
-    stage.scaleX = pRatio * sRatio
-    stage.scaleY = pRatio * sRatio
-    lastW = iw; lastH = ih; lastS = sRatio
+    this.canvas.width = w * pRatio * sRatio
+    this.canvas.height = h * pRatio * sRatio
+    this.canvas.style.width = w * sRatio + 'px'
+    this.canvas.style.height = h * sRatio + 'px'
+    this.stage.scaleX = pRatio * sRatio
+    this.stage.scaleY = pRatio * sRatio
+    this.lastW = iw
+    this.lastH = ih
+    this.lastS = sRatio
   }
 }
 
