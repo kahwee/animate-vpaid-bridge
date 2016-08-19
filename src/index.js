@@ -41,14 +41,14 @@ export default class AnimateVpaidBridge extends Linear {
   }
 
   handleFileLoad (ev) {
-    if (evt.item.type == 'image') {
-      images[evt.item.id] = evt.result
+    if (ev.item.type == 'image') {
+      images[ev.item.id] = ev.result
     }
   }
 
   handleComplete (ev) {
     // This function is always called, irrespective of the content. You can use the variable "stage" after it is created in token create_stage.
-    var queue = evt.target
+    var queue = ev.target
     var ssMetadata = lib.ssMetadata
     for (i = 0; i < ssMetadata.length; i++) {
       ss[ssMetadata[i].name] = new createjs.SpriteSheet({'images': [queue.getResult(ssMetadata[i].name)], 'frames': ssMetadata[i].frames})
