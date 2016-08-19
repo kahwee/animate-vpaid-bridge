@@ -25,8 +25,8 @@ export default class AnimateVpaidBridge extends Linear {
       this.images = images || {}
       this.loader = new createjs.LoadQueue(false)
       this.loader.addEventListener('fileload', this.handleFileLoad.bind(this))
-      this.loader.addEventListener('complete', function () {
-        this.handleComplete.bind(this)
+      this.loader.addEventListener('complete', (ev) => {
+        this.handleComplete(ev)
       })
       super.initAd(
         width,
@@ -40,13 +40,13 @@ export default class AnimateVpaidBridge extends Linear {
     })
   }
 
-  handleFileLoad (evt) {
+  handleFileLoad (ev) {
     if (evt.item.type == 'image') {
       images[evt.item.id] = evt.result
     }
   }
 
-  handleComplete (evt) {
+  handleComplete (ev) {
     // This function is always called, irrespective of the content. You can use the variable "stage" after it is created in token create_stage.
     var queue = evt.target
     var ssMetadata = lib.ssMetadata
