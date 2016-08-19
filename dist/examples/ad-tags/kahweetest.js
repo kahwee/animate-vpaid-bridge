@@ -887,8 +887,11 @@ var AnimateVpaidBridge = function (_Linear) {
       // This function is always called, irrespective of the content. You can use the variable "stage" after it is created in token create_stage.
       var queue = ev.target;
       var ssMetadata = lib.ssMetadata;
-      for (i = 0; i < ssMetadata.length; i++) {
-        ss[ssMetadata[i].name] = new createjs.SpriteSheet({ 'images': [queue.getResult(ssMetadata[i].name)], 'frames': ssMetadata[i].frames });
+      for (var i = 0; i < ssMetadata.length; i++) {
+        ss[ssMetadata[i].name] = new createjs.SpriteSheet({
+          images: [queue.getResult(ssMetadata[i].name)],
+          frames: ssMetadata[i].frames
+        });
       }
       var exportRoot = new lib[this.bridgeId]();
       this.stage = new createjs.Stage(this.canvas);
