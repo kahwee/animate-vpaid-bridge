@@ -1,4 +1,5 @@
-import Linear from '../node_modules/vpaid-ad/src/linear'
+const Linear = require('../node_modules/vpaid-ad/src/linear')
+const hexRgb = require('hex-rgb');
 import createScript from './util/createScript'
 
 export default class AnimateVpaidBridge extends Linear {
@@ -52,10 +53,13 @@ export default class AnimateVpaidBridge extends Linear {
   }
 
   initStage () {
-    let exportRoot = new lib[this.bridgeId]()
+    this.exportRoot = new lib[this.bridgeId]()
+    const [r, g, b] = hexRgb(lib.properties.color);
+    this.canvas.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${lib.properties.opacity}`
+    console.log(this.canvas.style.backgroundColor)
     this.stage = new createjs.Stage(this.canvas)
-    exportRoot.__elan__ = this
-    this.stage.addChild(exportRoot)
+    this.exportRoot.__elan__ = this
+    this.stage.addChild(this.exportRoot)
     this.stage.enableMouseOver()
     // Registers the "tick" event listener.
     createjs.Ticker.setFPS(lib.properties.fps)

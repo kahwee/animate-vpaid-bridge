@@ -1,4 +1,22 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+module.exports = function (hex) {
+	if (typeof hex !== 'string') {
+		throw new TypeError('Expected a string');
+	}
+
+	hex = hex.replace(/^#/, '');
+
+	if (hex.length === 3) {
+		hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+	}
+
+	var num = parseInt(hex, 16);
+
+	return [num >> 16, num >> 8 & 255, num & 255];
+};
+
+},{}],2:[function(require,module,exports){
 function E () {
   // Keep this empty so it's easier to inherit from
   // (via https://github.com/lipsmack from https://github.com/scottcorgan/tiny-emitter/issues/3)
@@ -66,16 +84,10 @@ E.prototype = {
 
 module.exports = E;
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _toggles = require('./toggles');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -85,8 +97,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var TinyEmitter = require('tiny-emitter');
 var vpaidMethods = require('./vpaid-methods.json');
+var VideoTracker = require('./video-tracker');
 
-var VideoTracker = require('./video-tracker').default;
+function $removeAll() {
+  this._destroyed = true;
+  this._videoSlot.src = '';
+  this._slot.innerHTML = '';
+  this._ui = null;
+}
 
 function _setSize(el, size) {
   el.width = size[0];
@@ -99,7 +117,7 @@ function _setSize(el, size) {
   }
 }
 
-var Linear = function (_TinyEmitter) {
+module.exports = function (_TinyEmitter) {
   _inherits(Linear, _TinyEmitter);
 
   function Linear() {
@@ -316,7 +334,7 @@ var Linear = function (_TinyEmitter) {
     value: function stopAd() {
       /* istanbul ignore if */
       if (this._destroyed) return;
-      _toggles.$removeAll.call(this);
+      $removeAll.call(this);
       this.emit('AdStopped');
     }
 
@@ -333,7 +351,7 @@ var Linear = function (_TinyEmitter) {
       if (!this._attributes.adSkippableState) {
         return false;
       }
-      _toggles.$removeAll.call(this);
+      $removeAll.call(this);
       this.emit('AdSkipped');
       this.emit('AdStopped');
     }
@@ -619,85 +637,28 @@ var Linear = function (_TinyEmitter) {
   return Linear;
 }(TinyEmitter);
 
-exports.default = Linear;
-
-},{"./toggles":3,"./video-tracker":4,"./vpaid-methods.json":6,"tiny-emitter":1}],3:[function(require,module,exports){
+},{"./video-tracker":4,"./vpaid-methods.json":6,"tiny-emitter":2}],4:[function(require,module,exports){
 'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.$toggleExpand = $toggleExpand;
-exports.$togglePlay = $togglePlay;
-exports.$toggleUI = $toggleUI;
-exports.$removeAll = $removeAll;
-function $toggleExpand(toExpand) {
-  $toggleUI.call(this, toExpand);
-  $togglePlay.call(this, toExpand);
-
-  this._attributes.expandAd = toExpand;
-  this._attributes.remainingTime = toExpand ? -2 : -1;
-
-  this.emit('AdExpandedChange');
-  this.emit('AdDurationChange');
-}
-
-function $togglePlay(toPlay) {
-  if (toPlay) {
-    this._videoSlot.pause();
-  } else {
-    this._videoSlot.play();
-  }
-}
-
-function $toggleUI(show) {
-  this._ui.interact.style.display = getDisplay();
-  this._ui.xBtn.style.display = getDisplay();
-
-  function getDisplay() {
-    return show ? 'block' : 'none';
-  }
-}
-
-function $removeAll() {
-  this._destroyed = true;
-  this._videoSlot.src = '';
-  this._slot.innerHTML = '';
-  this._ui = null;
-}
-
-},{}],4:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _vpaidLifeCycle = require('./vpaid-life-cycle');
-
-var _vpaidLifeCycle2 = _interopRequireDefault(_vpaidLifeCycle);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var vpaidLifeCycle = require('./vpaid-life-cycle');
 var quartiles = [{
   value: 0,
-  name: _vpaidLifeCycle2.default[0]
+  name: vpaidLifeCycle[0]
 }, {
   value: 0.25,
-  name: _vpaidLifeCycle2.default[1]
+  name: vpaidLifeCycle[1]
 }, {
   value: 0.50,
-  name: _vpaidLifeCycle2.default[2]
+  name: vpaidLifeCycle[2]
 }, {
   value: 0.75,
-  name: _vpaidLifeCycle2.default[3]
+  name: vpaidLifeCycle[3]
 }];
-
-var _class = function () {
+module.exports = function () {
   /**
    * [constructor description]
    * @param  {[type]} el      [description]
@@ -740,7 +701,7 @@ var _class = function () {
   }, {
     key: 'handleEnded',
     value: function handleEnded() {
-      this.emit(_vpaidLifeCycle2.default[4]);
+      this.emit(vpaidLifeCycle[4]);
       // Garbage collect event listeners
       this.el.removeEventListener('timeupdate', this.handleTimeupdate);
       this.el.removeEventListener('ended', this.handleEnded);
@@ -750,16 +711,10 @@ var _class = function () {
   return _class;
 }();
 
-exports.default = _class;
-
 },{"./vpaid-life-cycle":5}],5:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var vpaidLifeCycle = ['Start', 'FirstQuartile', 'Midpoint', 'ThirdQuartile', 'Complete'];
-exports.default = vpaidLifeCycle;
+module.exports = ['Start', 'FirstQuartile', 'Midpoint', 'ThirdQuartile', 'Complete'];
 
 },{}],6:[function(require,module,exports){
 module.exports=[
@@ -815,13 +770,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-var _linear = require('vpaid-ad/src/linear');
-
-var _linear2 = _interopRequireDefault(_linear);
 
 var _createScript = require('./util/createScript');
 
@@ -834,6 +787,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Linear = require('../node_modules/vpaid-ad/src/linear');
+var hexRgb = require('hex-rgb');
 
 var AnimateVpaidBridge = function (_Linear) {
   _inherits(AnimateVpaidBridge, _Linear);
@@ -890,10 +846,21 @@ var AnimateVpaidBridge = function (_Linear) {
   }, {
     key: 'initStage',
     value: function initStage() {
-      var exportRoot = new lib[this.bridgeId]();
+      this.exportRoot = new lib[this.bridgeId]();
+
+      var _hexRgb = hexRgb(lib.properties.color);
+
+      var _hexRgb2 = _slicedToArray(_hexRgb, 3);
+
+      var r = _hexRgb2[0];
+      var g = _hexRgb2[1];
+      var b = _hexRgb2[2];
+
+      this.canvas.style.backgroundColor = 'rgba(' + r + ', ' + g + ', ' + b + ', ' + lib.properties.opacity;
+      console.log(this.canvas.style.backgroundColor);
       this.stage = new createjs.Stage(this.canvas);
-      exportRoot.__elan__ = this;
-      this.stage.addChild(exportRoot);
+      this.exportRoot.__elan__ = this;
+      this.stage.addChild(this.exportRoot);
       this.stage.enableMouseOver();
       // Registers the "tick" event listener.
       createjs.Ticker.setFPS(lib.properties.fps);
@@ -955,7 +922,7 @@ var AnimateVpaidBridge = function (_Linear) {
   }]);
 
   return AnimateVpaidBridge;
-}(_linear2.default);
+}(Linear);
 
 exports.default = AnimateVpaidBridge;
 
@@ -983,7 +950,7 @@ AnimateVpaidBridge.prototype.renderSlot_ = function (callback) {
   document.body.appendChild(createjsScript);
 };
 
-},{"./util/createScript":9,"vpaid-ad/src/linear":2}],9:[function(require,module,exports){
+},{"../node_modules/vpaid-ad/src/linear":3,"./util/createScript":9,"hex-rgb":1}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
