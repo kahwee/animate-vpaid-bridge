@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/kahwee/animate-vpaid-bridge#readme",
   "dependencies": {
-    "vpaid-ad": "^2.0.4"
+    "vpaid-ad": "^2.0.5"
   },
   "devDependencies": {
     "babel-core": "^6.13.2",

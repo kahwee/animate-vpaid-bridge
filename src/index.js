@@ -1,4 +1,4 @@
-import Linear from 'vpaid-ad/src/linear'
+import Linear from '../node_modules/vpaid-ad/src/linear'
 import createScript from './util/createScript'
 
 export default class AnimateVpaidBridge extends Linear {
