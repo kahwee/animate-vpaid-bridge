@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 function E () {
   // Keep this empty so it's easier to inherit from
   // (via https://github.com/lipsmack from https://github.com/scottcorgan/tiny-emitter/issues/3)
@@ -792,6 +792,28 @@ module.exports=[
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = createScript;
+/**
+ * Creates the script element and provides a callback via onload
+ *
+ * @param  {[type]}   path [description]
+ * @param  {Function} cb   [description]
+ * @return {[type]}        [description]
+ */
+function createScript(path, cb) {
+  var script = document.createElement('script');
+  script.src = path;
+  script.type = 'text/javascript';
+  script.onload = cb;
+  return script;
+}
+
+},{}],"animate-vpaid-bridge":[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -961,26 +983,4 @@ AnimateVpaidBridge.prototype.renderSlot_ = function (callback) {
   document.body.appendChild(createjsScript);
 };
 
-},{"./util/createScript":8,"vpaid-ad/src/linear":2}],8:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = createScript;
-/**
- * Creates the script element and provides a callback via onload
- *
- * @param  {[type]}   path [description]
- * @param  {Function} cb   [description]
- * @return {[type]}        [description]
- */
-function createScript(path, cb) {
-  var script = document.createElement('script');
-  script.src = path;
-  script.type = 'text/javascript';
-  script.onload = cb;
-  return script;
-}
-
-},{}]},{},[7]);
+},{"./util/createScript":7,"vpaid-ad/src/linear":2}]},{},[]);
